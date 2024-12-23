@@ -1,0 +1,45 @@
+body{
+    margin:0;
+    background-color: rgb(189, 170, 170);
+    box-sizing: content-box;
+    padding: 0;
+}
+.logo{
+    filter: drop-shadow(5px 3px 5px rgba(0, 0, 0, 0.8));
+   
+}
+.popular-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+  gap: 0; 
+  padding: 0;
+  margin: 0 auto; 
+  justify-items: center; 
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 1024px) {
+    .popular-grid {
+      grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+      gap:5px
+    }
+  }
+  
+  /* Pantallas pequeñas (móviles) - 1 columna */
+  @media (max-width: 600px) {
+    .popular-grid {
+      grid-template-columns: 1fr; /* Una columna */
+    }
+  
+    .popular-grid li {
+      width: 90%; /* Ajusta el ancho de las tarjetas al 90% del contenedor */
+      max-width: 400px; /* Limita el ancho máximo de la tarjeta */
+      height: auto; /* Permite que la altura se ajuste dinámicamente */
+    }
+  
+    .popular-grid img {
+      object-fit: cover; /* Ajusta la imagen sin distorsión */
+      width: 100%; /* Asegura que la imagen ocupe todo el ancho */
+      height: auto; /* Mantiene la proporción de la imagen */
+    }
+  }

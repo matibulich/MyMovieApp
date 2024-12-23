@@ -1,0 +1,61 @@
+/* Contenedor del slider */
+.slider-container {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+
+.slider-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Efecto de zoom  */
+.slider-image:hover {
+  transform: scale(1.05);
+}
+
+/* texto sobre la imagen */
+.slider-text {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: rgba(25,118,210, 0.767); 
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 90%;
+  z-index: 2; 
+}
+/* Estilo del título */
+.slider-text h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Estilo de la descripción */
+.slider-text p {
+  font-size: 1rem;
+  margin-top: 5px;
+  line-height: 1.5;
+}
+
+/* Estilo para el contenedor del slider (en móviles) */
+@media (max-width: 768px) {
+  .slider-image {
+    height: 250px;
+  }
+
+  .slider-text h2 {
+    font-size: 1.2rem;
+  }
+
+  .slider-text p {
+    font-size: 0.9rem;
+  }
+}
