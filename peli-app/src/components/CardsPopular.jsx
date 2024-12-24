@@ -16,7 +16,7 @@ import { useModal } from "../context/ModalContext";
 
 export const CardsPopular = () => {
   
-  const { openModal } = useModal();
+  const { openModal, openModalTrailer } = useModal();
 
   const options = useMemo(() => ({ //pasarle useMEMO PARA QUE NO RENDERIZE TODO EL TIEMPO options!!!!!!!!!!
     method: "GET",
@@ -108,7 +108,10 @@ export const CardsPopular = () => {
                 >
                   <FavoriteBorder />
                 </IconButton>
-                <Button variant="solid" color="neutral">
+                <Button variant="solid" color="neutral" onClick={ ()=>{
+                  
+                  openModalTrailer(movie)
+                }}>
                   Trailer
                 </Button>
                 <Button variant="solid" color="primary" onClick={()=>openModal(movie)}>

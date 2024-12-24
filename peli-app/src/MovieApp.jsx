@@ -4,6 +4,7 @@ import { SearchMovie } from "./components/SearchMovie"
 import { CardsPopular } from "./components/CardsPopular"
 import { Modals } from "./components/Modals"
 import { ModalProvider } from "./context/ModalContext"
+import { TrailerModal } from "./components/TrailerModal"
 
 
 export const MovieApp = () => {
@@ -12,7 +13,9 @@ export const MovieApp = () => {
   <ImageSlider></ImageSlider>
   <SearchMovie></SearchMovie>
   <ModalProvider>
+  <TrailerModal/>
     <Modals/>
+   
     <CardsPopular/>
   </ModalProvider>
   </>

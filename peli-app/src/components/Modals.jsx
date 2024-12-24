@@ -14,7 +14,7 @@ export const Modals = () => {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZDFmMzkwYjMwZWI5ZWFkYTg2YTVlOGI4ZjQ4YjYyYyIsIm5iZiI6MTcwNTAxNjQyOS42NDIsInN1YiI6IjY1YTA3YzZkYjM0NDA5MDEyMTY2ZjE3YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UXEL5bg-RE1sJCSrfjtCUkK3ktUTysiqDuZHUAkDjoA'
+        Authorization: import.meta.env.VITE_API_AUTH_TOKEN,
 
       },
     }),
