@@ -35,7 +35,7 @@ export const CardsPopular = () => {
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const popularMovies = data.results.slice(0, 5);
+  const popularMovies = data.results.slice(0, 10);
 
   
   const acortarTitulo = (title) => {
@@ -45,7 +45,7 @@ export const CardsPopular = () => {
  
   return (
     <><div className="container-fluid">
-      <h2>Populares del momento...</h2>
+      <h2 className="text-light">Populares del momento...</h2>
 
       <Box component="ul" className="popular-grid">
         {popularMovies.map((movie) => (

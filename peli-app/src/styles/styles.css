@@ -1,7 +1,7 @@
 body{
     margin:0;
-    background-color: rgb(189, 170, 170);
-    box-sizing: content-box;
+    background: linear-gradient(to right, #000000, #1976D2);
+    box-sizing: border-box;
     padding: 0;
 }
 .logo{
@@ -9,14 +9,28 @@ body{
    
 }
 .popular-grid {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
-  gap: 0; 
+  grid-template-columns: repeat(5, 1fr); 
+  grid-template-rows: repeat(2, auto); 
+
+  row-gap: 10px; 
   padding: 0;
   margin: 0 auto; 
   justify-items: center; 
+  align-items: center; 
+  max-width: 100%; 
+  box-sizing: border-box; 
 }
 
+form {
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Asegura que el formulario ocupe todo el ancho disponible */
+}
 /* MEDIA QUERIES */
 @media (max-width: 1024px) {
     .popular-grid {

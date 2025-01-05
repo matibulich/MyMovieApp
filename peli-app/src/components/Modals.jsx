@@ -5,6 +5,7 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import { useState, useEffect, useMemo } from "react";
 
+
 export const Modals = () => {
   const { modalData, isOpen, closeModal, selectedMovie } = useModal();
   const [providers, setProviders] = useState([]);
@@ -15,7 +16,6 @@ export const Modals = () => {
       headers: {
         accept: "application/json",
         Authorization: import.meta.env.VITE_API_AUTH_TOKEN,
-
       },
     }),
     []
@@ -39,8 +39,14 @@ export const Modals = () => {
             ...(countryProviders?.buy || []),
             ...(countryProviders?.flatrate || []),
           ];
-          console.log("Proveedores extraídos:", providersList);
-          setProviders(providersList);
+
+          // Filtrar duplicados basados en `provider_id`
+          const uniqueProviders = Array.from(
+            new Map(providersList.map(provider => [provider.provider_id, provider])).values()
+          );
+
+          console.log("Proveedores únicos:", uniqueProviders);
+          setProviders(uniqueProviders);
         } catch (error) {
           console.error("Error fetching providers:", error);
           setProviders([]);
@@ -85,9 +91,17 @@ export const Modals = () => {
         <Typography textColor="text.tertiary" sx={{ mb: 2 }}>
           {modalData.overview}
         </Typography>
-        <h3>Proveedores</h3>
+        <h3>Proveedores:</h3>
         {providers.length > 0 ? (
-          <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              marginTop: "10px",
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
+          >
             {providers.map((provider) => (
               <div key={provider.provider_id}>
                 <img
