@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 export const SearchMovie = () => {
   const [query, setQuery] = useState(""); // Estado para el query
   const { selectedMovie, setSelectedMovie } = useMovie() // Película seleccionada
+  const [errorMessage, setErrorMessage] = useState(""); // Estado para el mensaje de error
 
   // Opciones de la API
   const options = useMemo(
@@ -73,10 +74,20 @@ export const SearchMovie = () => {
   }, [selectedMovie]);
 
 
-  const handleVerMas = () => {
+    const handleVerMas = () => {
     // Redirige a la página de detalles de la película
     navigate("/pelicula");
   };
+
+
+  useEffect(() => {
+    return () => {
+      setErrorMessage(""); // Limpiar el mensaje de error al navegar fuera de esta página
+    };
+  }, [navigate]);
+
+
+
   return (
     <Box
       sx={{
@@ -161,10 +172,10 @@ export const SearchMovie = () => {
       </form>
 
       {/* Estado de carga */}
-      {loading && <p>Cargando...</p>}
+      {loading && <p style={{color:"white"}}>Cargando...</p>}
 
-      {/* Error */}
-      {error && query && <p style={{ color: "red" }}>Error: {error.message}</p>}
+      
+      {error && query && <p style={{ color: "red" }}>{errorMessage}</p>}
 
       {/* Resultados */}
       <Box sx={{ width: "100%", maxWidth: "900px", marginTop: 2 }}>
