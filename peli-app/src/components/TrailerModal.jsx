@@ -86,7 +86,7 @@ export const TrailerModal = () => {
             allowFullScreen
           />
         ) : (
-          <Typography>No hay tráiler disponible</Typography>
+          <Typography><p style={{marginTop:"20px"}}>No hay tráiler disponible</p></Typography>
         )}
       </Sheet>
     </Modal>

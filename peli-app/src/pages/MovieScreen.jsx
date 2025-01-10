@@ -90,7 +90,7 @@ export const MovieScreen = () => {
               },
             }}
           >
-            <img src="../src/img/back.png" alt="" onClick={handleGoHome} />
+            <img src="../public/img/back.png" alt="" onClick={handleGoHome} />
           </Box>{" "}
         </Box>
 

@@ -85,7 +85,7 @@ export const CustomNav = () => {
           >
             <Box
               component="img"
-              src="./src/img/logo.png"
+              src="./public/img/logo.png"
               alt="Logo"
               sx={{
                 height: { xs: 20, md: 30 },
