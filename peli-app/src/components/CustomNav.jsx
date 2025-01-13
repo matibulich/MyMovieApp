@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,13 +12,20 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
+import { Register } from "../components/Register";
+import {Login} from "../components/Login"
+
 
 const pages = ["Home"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Registrarse", "Login"];
+
 
 export const CustomNav = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -35,8 +42,23 @@ export const CustomNav = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleOpenRegisterModal = () => {
+    setIsRegisterOpen(true);
+    handleCloseUserMenu();
+  };
 
-  return (
+  const handleOpenLoginModal = () => {
+    setIsLoginOpen(true);
+    handleCloseUserMenu();
+  };
+
+  const handleCloseModals = () => {
+    setIsRegisterOpen(false);
+    setIsLoginOpen(false);
+  };
+
+
+  return (<>
     <AppBar color="primary" position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -85,7 +107,7 @@ export const CustomNav = () => {
           >
             <Box
               component="img"
-              src="./public/img/logo.png"
+              src="./img/logo.png"
               alt="Logo"
               sx={{
                 height: { xs: 20, md: 30 },
@@ -138,14 +160,33 @@ export const CustomNav = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                <MenuItem
+                key={setting}
+                onClick={
+                  setting === "Registrarse"
+                    ? handleOpenRegisterModal
+                    : setting === "Login"
+                    ? handleOpenLoginModal 
+                    :handleCloseUserMenu
+                }
+              >
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
               ))}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
+ {/* Modales de Registro y Login */}
+ {isRegisterOpen && (
+        <Register isOpen={isRegisterOpen} onClose={handleCloseModals} />
+      )}
+
+{isLoginOpen && (
+        <Login isOpen={isLoginOpen} onClose={handleCloseModals} />
+      )}
+
+    </>
   );
 };

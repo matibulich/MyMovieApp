@@ -14,10 +14,25 @@ import { genres } from "../helpers/genres";
 import { useModal } from "../context/ModalContext";
 import { ImageModal } from "../components/ImageModal";
 import { TrailerModal } from "../components/TrailerModal";
+import { useProviders } from "../hooks/useProviders";
+import { useEffect } from "react";
 
 export const MovieScreen = () => {
   const { selectedMovie } = useMovie(MovieContext);
+ const providers = useProviders(selectedMovie) 
+  
+  const navigate = useNavigate();
 /*   console.log(selectedMovie); */
+
+useEffect(() => {
+  if (!selectedMovie) {
+    navigate("/"); // Redirige al inicio si no hay película seleccionada
+  }
+}, [selectedMovie, navigate]); // Ejecuta el efecto cuando cambien selectedMovie o navigate
+
+if (!selectedMovie) {
+  return null; // Mientras se redirige, no renderiza nada
+}
 
   // Map los IDs de género a nombres
   const movieGenres = selectedMovie.genre_ids?.map((id) => {
@@ -27,7 +42,6 @@ export const MovieScreen = () => {
 
   const { openModal, closeModal, isOpen, openModalTrailer } = useModal();
 
-  const navigate = useNavigate();
 
   const handleOpenModal = () => {
     openModal(`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`); // Abre el modal con la película seleccionada
@@ -90,7 +104,7 @@ export const MovieScreen = () => {
               },
             }}
           >
-            <img src="../public/img/back.png" alt="" onClick={handleGoHome} />
+            <img src="./img/back.png" alt="" onClick={handleGoHome} />
           </Box>{" "}
         </Box>
 
@@ -119,9 +133,30 @@ export const MovieScreen = () => {
           <Typography gutterBottom variant="h6" component="div">
             Genero: <h6> {movieGenres?.join(", ")}</h6>
           </Typography>
-          <Typography gutterBottom variant="h6" component="div">
-            Reparto:
-          </Typography>
+        
+          {providers.length > 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                marginTop: "10px",
+                flexWrap: "wrap",
+                justifyContent:"flex-start"
+              }}
+            >
+              {providers.map((provider) => (
+                <Box key={provider.provider_id}>
+                  <img
+                    src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                    alt={provider.provider_name}
+                    style={{ width: "50px", height: "auto" }}
+                  />
+                </Box>
+              ))}
+            </Box>
+          ) : (
+            <Typography>No hay proveedores disponibles</Typography>
+          )}
         </CardContent>
         <CardActions>
           <Button
@@ -137,6 +172,8 @@ export const MovieScreen = () => {
           >
             Agregar a mi lista
           </Button>
+
+         
         </CardActions>
       </Card>
 

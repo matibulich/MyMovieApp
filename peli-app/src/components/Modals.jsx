@@ -3,60 +3,12 @@ import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
-import { useState, useEffect, useMemo } from "react";
+import { useProviders } from "../hooks/useProviders";
 
 
 export const Modals = () => {
   const { modalData, isOpen, closeModal, selectedMovie } = useModal();
-  const [providers, setProviders] = useState([]);
-
-  const options = useMemo(
-    () => ({
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: import.meta.env.VITE_API_AUTH_TOKEN,
-      },
-    }),
-    []
-  );
-
-  useEffect(() => {
-    const fetchMovieProviders = async () => {
-      if (selectedMovie) {
-        try {
-          const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${selectedMovie.id}/watch/providers`,
-            options
-          );
-          const data = await response.json();
-          console.log("Respuesta de la API:", data);
-
-          const countryProviders =
-            data.results?.AR || data.results?.US || data.results?.ES;
-          const providersList = [
-            ...(countryProviders?.rent || []),
-            ...(countryProviders?.buy || []),
-            ...(countryProviders?.flatrate || []),
-          ];
-
-          // Filtrar duplicados basados en `provider_id`
-          const uniqueProviders = Array.from(
-            new Map(providersList.map(provider => [provider.provider_id, provider])).values()
-          );
-
-          console.log("Proveedores únicos:", uniqueProviders);
-          setProviders(uniqueProviders);
-        } catch (error) {
-          console.error("Error fetching providers:", error);
-          setProviders([]);
-        }
-      }
-    };
-
-    fetchMovieProviders();
-  }, [selectedMovie, options]);
-
+  const providers = useProviders(selectedMovie);
   if (!modalData) return null;
 
   return (
@@ -71,12 +23,15 @@ export const Modals = () => {
         variant="outlined"
         sx={{
           maxWidth: 500,
+          maxHeight:"95vh",
+          overflow:"auto",
           borderRadius: "md",
           p: 3,
           boxShadow: "lg",
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
+          
         }}
       >
         <ModalClose variant="plain" sx={{ m: 1 }} onClick={closeModal} />
