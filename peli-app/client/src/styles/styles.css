@@ -31,7 +31,23 @@ form {
   display: flex;
   justify-content: center; /* Asegura que el formulario ocupe todo el ancho disponible */
 }
+
+.table {
+  border-radius: 15px !important; /* Ajusta según el tamaño que prefieras */
+  overflow: hidden;
+  
+}
+.icono_eliminar { height: 20px;
+  transition: filter 0.3s ease-in-out;
+  cursor: pointer;
+&:hover{
+  filter: invert(30%) sepia(90%) saturate(300%) hue-rotate(90deg);
+}
+}
+
+
 /* MEDIA QUERIES */
+
 @media (max-width: 1024px) {
     .popular-grid {
       grid-template-columns: repeat(2, 1fr); /* 2 columnas */
@@ -57,3 +73,14 @@ form {
       height: auto; /* Mantiene la proporción de la imagen */
     }
   }
+
+  .save-icon{
+    color: #fff; 
+cursor: pointer;
+   transition: color 0.3s ease
+   
+  }
+  .save-icon:hover{
+    color: #1976d2;
+  }
+

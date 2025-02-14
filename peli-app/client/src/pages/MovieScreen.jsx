@@ -15,24 +15,27 @@ import { useModal } from "../context/ModalContext";
 import { ImageModal } from "../components/ImageModal";
 import { TrailerModal } from "../components/TrailerModal";
 import { useProviders } from "../hooks/useProviders";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { addMovieList } from "../api";
 
 export const MovieScreen = () => {
   const { selectedMovie } = useMovie(MovieContext);
- const providers = useProviders(selectedMovie) 
-  
+  const [isAdded, setIsAdded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const providers = useProviders(selectedMovie);
+  const { addUserMovie } = useMovie();
+
   const navigate = useNavigate();
-/*   console.log(selectedMovie); */
 
-useEffect(() => {
+  useEffect(() => {
+    if (!selectedMovie) {
+      navigate("/"); // Redirige al inicio si no hay película seleccionada
+    }
+  }, [selectedMovie, navigate]); // Ejecuta el efecto cuando cambien selectedMovie o navigate
+
   if (!selectedMovie) {
-    navigate("/"); // Redirige al inicio si no hay película seleccionada
+    return null; // Mientras se redirige, no renderiza nada
   }
-}, [selectedMovie, navigate]); // Ejecuta el efecto cuando cambien selectedMovie o navigate
-
-if (!selectedMovie) {
-  return null; // Mientras se redirige, no renderiza nada
-}
 
   // Map los IDs de género a nombres
   const movieGenres = selectedMovie.genre_ids?.map((id) => {
@@ -41,7 +44,6 @@ if (!selectedMovie) {
   });
 
   const { openModal, closeModal, isOpen, openModalTrailer } = useModal();
-
 
   const handleOpenModal = () => {
     openModal(`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`); // Abre el modal con la película seleccionada
@@ -59,6 +61,31 @@ if (!selectedMovie) {
     openModalTrailer(selectedMovie);
   };
 
+  const handleAddMovie = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No estás autenticado");
+      }
+  
+      const data = {
+        title: selectedMovie.title,
+      };
+  
+      const response = await addMovieList(data, token);
+
+  
+      if (response && response.title) {
+        setIsAdded(true);
+        addUserMovie(response); // Agrega la película al estado global
+        setErrorMessage(""); // Limpiar el mensaje de error si fue exitosa
+      }
+    } catch (error) {
+      console.error("Error:", error.message);
+      setErrorMessage(error.message); // Mostrar mensaje de error
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -69,9 +96,7 @@ if (!selectedMovie) {
       }}
     >
       <Card sx={{ maxWidth: 800 }}>
-        <Box
-          sx={{ position: "relative", display: "inline-block", width: "100%" }}
-        >
+        <Box sx={{ position: "relative", display: "inline-block", width: "100%" }}>
           <CardMedia
             sx={{
               objectFit: "cover", // Ajusta cómo se escala la imagen
@@ -96,7 +121,7 @@ if (!selectedMovie) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white", // Color del ícono
+              color: "white",
               zIndex: 2,
               transition: "transform 0.2s ease-in-out",
               ":hover": {
@@ -104,19 +129,14 @@ if (!selectedMovie) {
               },
             }}
           >
-            <img src="./img/back.png" alt="" onClick={handleGoHome} />
-          </Box>{" "}
+            <div onClick={handleGoHome}>
+              <img src="./img/back.png" alt="volver" />
+              <span className="m-2">VOLVER</span>
+            </div>
+          </Box>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            alignItems: "center",
-            zIndex: 4,
-            marginTop: 1,
-          }}
-        >
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center", zIndex: 4, marginTop: 1 }}>
           <Chip variant="soft" startDecorator={<StarIcon />}>
             {parseFloat(selectedMovie.vote_average.toFixed(2))}
           </Chip>
@@ -133,17 +153,9 @@ if (!selectedMovie) {
           <Typography gutterBottom variant="h6" component="div">
             Genero: <h6> {movieGenres?.join(", ")}</h6>
           </Typography>
-        
+
           {providers.length > 0 ? (
-            <Box
-              sx={{
-                display: "flex",
-                gap: "10px",
-                marginTop: "10px",
-                flexWrap: "wrap",
-                justifyContent:"flex-start"
-              }}
-            >
+            <Box sx={{ display: "flex", gap: "10px", marginTop: "10px", flexWrap: "wrap", justifyContent: "flex-start" }}>
               {providers.map((provider) => (
                 <Box key={provider.provider_id}>
                   <img
@@ -167,13 +179,14 @@ if (!selectedMovie) {
             Trailer
           </Button>
           <Button
+            onClick={handleAddMovie}
+            disabled={isAdded}
             size="small"
             sx={{ backgroundColor: "#1976d2", color: "white" }}
           >
-            Agregar a mi lista
+            {isAdded ? "Agregado a mi lista" : "Agregar a mi lista"}
           </Button>
-
-         
+          {errorMessage && <Typography color="error">{errorMessage}</Typography>}
         </CardActions>
       </Card>
 

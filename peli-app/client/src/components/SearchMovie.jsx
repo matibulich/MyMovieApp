@@ -10,6 +10,7 @@ import { useFetch } from "../hooks/useFetch";
 import { useMovie } from "../context/MovieContext";
 import { useNavigate } from "react-router-dom";
 
+
 export const SearchMovie = () => {
   const [query, setQuery] = useState(""); // Estado para el query
   const { selectedMovie, setSelectedMovie } = useMovie() // Película seleccionada

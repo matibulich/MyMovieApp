@@ -2,18 +2,32 @@ import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import { Typography, Button } from "@mui/material";
-
+import { loginUser } from "../api";
 import Sheet from "@mui/joy/Sheet";
+import { useNavigate } from "react-router-dom"; 
 
 export const Login = ({isOpen, onClose}) => {
+  const navigate = useNavigate(); // Inicializar useNavigate
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError]= useState("")
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Logueado con:", { email, password });
-    onClose(); // Cerrar el modal después de enviar
+    setError("");
+    setSuccess("");
+  
+    try {
+      const user = await loginUser(email, password);
+      setSuccess(user.message);
+      onClose();
+      navigate("/userpanel") 
+    } catch (err) {
+      // Usar el mensaje de error enviado por el backend
+      setError(err.message);
+    }
   };
 
   return (
@@ -62,6 +76,7 @@ export const Login = ({isOpen, onClose}) => {
               required
               style={{ marginBottom: "10px" }}
             />
+            
           </div>
           <div className="mb-3" style={{ display: "flex", flexDirection: "column" }}>
             <label htmlFor="inputPassword3" className="form-label">
@@ -89,6 +104,27 @@ export const Login = ({isOpen, onClose}) => {
           >
             Ingresar
           </Button>
+{/* Mensajes de éxito y error */}
+{success && (
+            <Typography
+              color="success"
+              variant="body2"
+              sx={{ mt: 2, textAlign: "center" }}
+            >
+              {success}
+            </Typography>
+          )}
+
+          {error && (
+            <Typography
+              color="error"
+              variant="body2"
+              sx={{ mt: 2, textAlign: "center" }}
+            >
+              {error}
+            </Typography>
+          )}
+   
           <p className="form-text mt-2">Olvide mi contraseña.</p>
         </form>
       </Sheet>
