@@ -14,18 +14,13 @@ export const UserPanel = () => {
   const { isOpen, openModal, closeModal, selectedMovie } = useModal();
   const [updatedMovies, setUpdatedMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [hasLoadedMovies, setHasLoadedMovies] = useState(false)
+
   const [critica, setCritica] = useState(""); 
   const [successMessage, setSuccessMessage] = useState("");
-  const [nombre, setNombre] = useState("");
+  const [nombre, setNombre] = useState(localStorage.getItem("nombre") || "");
   
-  useEffect(()=>{
-    const nombreGuardado = localStorage.getItem("nombre")
-    if(nombreGuardado){
-      setNombre(nombreGuardado)
-    }
-  })
 
+  useEffect(() => {
   const fetchUserMovies = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -58,14 +53,9 @@ export const UserPanel = () => {
       console.error("Error al cargar las películas:", error);
       setLoading(false);
     }
-  };
+  };fetchUserMovies();
+}, []);
 
-  useEffect(() => {
-    // Solo llamamos a fetchUserMovies si updatedMovies está vacío
-    if (!hasLoadedMovies) {
-      fetchUserMovies();
-    }
-  }, [hasLoadedMovies]); 
 
 
   const handleOpenModal = (movie) => {
