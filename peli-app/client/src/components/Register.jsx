@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import { Typography, Button } from "@mui/material";
@@ -12,22 +12,31 @@ export const Register = ({ isOpen, onClose }) => {
   const [error, setError] = useState(""); // Estado para manejar errores
   const [success, setSuccess] = useState("");
 
+  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setSuccess("");
 
+   
+ 
     try {
       const user = await registerUser(email, password, nombre);
       setSuccess(user.message);
       setTimeout(() => {
         onClose(); // Cierra el modal después de 3 segundos
       }, 3000);
+
+      localStorage.setItem("nombre",user.nombre)
+     
+      console.log(user)
     } catch (err) {
       // Usar el mensaje de error enviado por el backend
       setError(err.message);
     }
   };
+
 
   return (
     <Modal

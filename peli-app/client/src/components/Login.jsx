@@ -18,12 +18,15 @@ export const Login = ({isOpen, onClose}) => {
     event.preventDefault();
     setError("");
     setSuccess("");
+    
   
     try {
       const user = await loginUser(email, password);
       setSuccess(user.message);
       onClose();
       navigate("/userpanel") 
+      localStorage.setItem("nombre", user.nombre);
+      
     } catch (err) {
       // Usar el mensaje de error enviado por el backend
       setError(err.message);

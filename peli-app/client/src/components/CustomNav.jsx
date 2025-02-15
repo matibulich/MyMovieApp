@@ -56,6 +56,8 @@ export const CustomNav = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("nombre");
+ 
     setIsLoggedIn(false);
     handleCloseUserMenu();
     navigate("/");
@@ -171,7 +173,7 @@ export const CustomNav = () => {
               ))}
             </Box>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="Registrarse/LogIn">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>

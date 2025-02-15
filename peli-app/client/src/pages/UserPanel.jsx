@@ -1,19 +1,30 @@
-import React, { useEffect, useState, useCallback } from "react"; // Importa useCallback
+import React, { useEffect, useState } from "react"; // Importa useCallback
 import { Button, Table, Form } from "react-bootstrap";
 import { useMovie } from "../context/MovieContext";
-import { updateMovie, deleteMovie } from "../api";
+import { updateMovie, deleteMovie, registerUser } from "../api";
 import { RatingStars } from "../components/RatingStars";
 import { useModal } from "../context/ModalContext"
 import { ModalCritica } from "../components/ModalCritica";
+import { useAutoLogout } from "../hooks/useAutoLogout";
 
 
 export const UserPanel = () => {
-  const { userMovies, setUserMovies } = useMovie();
+  useAutoLogout()
+  const {  setUserMovies } = useMovie();
   const { isOpen, openModal, closeModal, selectedMovie } = useModal();
   const [updatedMovies, setUpdatedMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasLoadedMovies, setHasLoadedMovies] = useState(false)
   const [critica, setCritica] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [nombre, setNombre] = useState("");
+  
+  useEffect(()=>{
+    const nombreGuardado = localStorage.getItem("nombre")
+    if(nombreGuardado){
+      setNombre(nombreGuardado)
+    }
+  })
 
   const fetchUserMovies = async () => {
     try {
@@ -27,8 +38,9 @@ export const UserPanel = () => {
           },
         }
       );
-
+      
       const data = await response.json();
+
       const movies = data.movies;
 
       if (Array.isArray(movies)) {
@@ -82,24 +94,19 @@ export const UserPanel = () => {
             miPuntuacion: movie.miPuntuacion,
             critica: movie.critica || "",
           };
-          console.log(
-            `Enviando actualización para ${movie.title}:`,
-            updatedData
-          );
-
+     
           const response = await updateMovie(movie._id, updatedData, token);
-          return { ...movie, ...response.movie }; // Fusionamos los datos actualizados
+          return { ...movie, ...response.movie };
         })
       );
 
-      // En lugar de llamar a fetchUserMovies, actualizamos el estado con los datos recién obtenidos
       setUpdatedMovies(updatedMoviesWithResponse);
       setUserMovies(updatedMoviesWithResponse);
-
-      alert("Todos los cambios se guardaron correctamente.");
+      setSuccessMessage("Cambios guardados correctamente");
+     
     } catch (error) {
       console.error("Error al guardar los cambios:", error);
-      alert("Ocurrió un error al intentar guardar los cambios.");
+      setSuccessMessage("Ocurrió un error al intentar guardar los cambios.");
     }
   };
 
@@ -126,13 +133,20 @@ export const UserPanel = () => {
       console.error("Error al eliminar la película:", error.message);
     }
   };
+ 
 
   return (
     <div className="container mt-5">
-      <h2 style={{color:"#1976d2"}} >Mi Lista de Películas</h2>
+     
+      <h2 style={{color:"white"}} >Lista de Películas - {nombre.toLocaleUpperCase()} </h2>
       <Button variant="success" onClick={handleSaveAllChanges} className="mb-3">
         Guardar todos los cambios
       </Button>
+      {successMessage && (
+        <div className="alert alert-success" role="alert">
+          {successMessage}
+        </div>
+      )}
       {loading ? (
         <p>Cargando tus películas...</p>
       ) : Array.isArray(updatedMovies) && updatedMovies.length > 0 ? (

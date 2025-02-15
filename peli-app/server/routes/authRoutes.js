@@ -31,7 +31,7 @@ authRoutes.post("/register", async (req, res) => {
 
     console.log(newUser);
 
-    res.status(201).json({ message: messages.succesRegister });
+    res.status(201).json({ message: messages.succesRegister, nombre:newUser.nombre });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: messages.serverError });
@@ -64,7 +64,7 @@ authRoutes.post("/login", async (req, res) => {
 
 
 
-    res.status(200).json({ message: "Inicio de sesión exitoso", token, user:{id:user._id, email: user.email}  });
+    res.status(200).json({ message: "Inicio de sesión exitoso", token, nombre: user.nombre, user:{id:user._id, email: user.email}  });
 
   } catch (error) {
     console.error(error);

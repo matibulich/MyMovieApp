@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-
+ 
   console.log("🛑 Auth Header recibido:", authHeader);
   const token = authHeader && authHeader.split(" ")[1];
 
@@ -18,6 +18,6 @@ export const verifyToken = (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(403).json({ message: "Token inválido" });
+    res.status(403).json({ message: "No estas logueado" });
   } 
 };
