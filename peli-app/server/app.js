@@ -4,8 +4,12 @@ import mongoose from "mongoose"
 import {authRoutes} from "./routes/authRoutes.js";
 import { userMovieRoutes } from './routes/userMovieRoutes.js';
 import morgan from "morgan";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 // Configuración de CORS
@@ -14,7 +18,13 @@ const corsOptions = {
   methods: 'GET, POST, PUT, DELETE', 
   allowedHeaders: 'Content-Type, Authorization', 
 };
+app.use(cors(corsOptions));
 
+app.use(express.json())
+
+  // Rutas
+app.use("/api", authRoutes);
+ app.use("/api", userMovieRoutes);
 
 const PORT = 5000
 
@@ -29,20 +39,18 @@ mongoose.connection.once("open", () => {
     console.log("Conectado a MongoDB");
   });
 
-
   //MIDDLEWARES
-  app.use(morgan("dev"));
-  app.use(express.json())
+ app.use(morgan("dev"));
 
-  app.use(cors(corsOptions));
+// Servir archivos estáticos del frontend
+  app.use(express.static(path.join(__dirname, "../client/dist"))); 
 
-  // Rutas
-  app.use("/api", authRoutes);
-  app.use("/api", userMovieRoutes);
-
- 
-
-    // Iniciar el servidor
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/dist", "index.html")); // Para Vite
+    
+  });
+  
+     // Iniciar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
   });
