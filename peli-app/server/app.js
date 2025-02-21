@@ -1,56 +1,35 @@
-import express from 'express';
-import cors from "cors"
-import mongoose from "mongoose"
-import {authRoutes} from "./routes/authRoutes.js";
-import { userMovieRoutes } from './routes/userMovieRoutes.js';
-import morgan from "morgan";
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
+import { authRoutes } from "./routes/authRoutes.js";
+import { userMovieRoutes } from "./routes/userMovieRoutes.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+app.use(cors());
+app.use(express.json());
 
-// Configuración de CORS
-const corsOptions = {
-  origin: 'http://localhost:5173', 
-  methods: 'GET, POST, PUT, DELETE', 
-  allowedHeaders: 'Content-Type, Authorization', 
-};
-app.use(cors(corsOptions));
-
-app.use(express.json())
-
-  // Rutas
+// Rutas de la API
 app.use("/api", authRoutes);
- app.use("/api", userMovieRoutes);
+app.use("/api", userMovieRoutes);
 
-const PORT = 5000
+// Servir el frontend
+app.use(express.static(path.join(__dirname, "../client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
+});
 
+const PORT = process.env.PORT || 5000;
 
-mongoose.connect("mongodb://127.0.0.1:27017/movieapp", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ Conectado a MongoDB"))
+  .catch(err => console.error("❌ Error al conectar MongoDB:", err));
 
-  // Verificar conexión a la base de datos
-mongoose.connection.once("open", () => {
-    console.log("Conectado a MongoDB");
-  });
-
-  //MIDDLEWARES
- app.use(morgan("dev"));
-
-// Servir archivos estáticos del frontend
-  app.use(express.static(path.join(__dirname, "../client/dist"))); 
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/dist", "index.html")); // Para Vite
-    
-  });
-  
-     // Iniciar el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  });
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
