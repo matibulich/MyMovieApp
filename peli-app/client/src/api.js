@@ -1,5 +1,5 @@
 const API_URL = import.meta.env.PROD
-  ? "https://mymovieapp.onrender.com/api"
+  ? "https://mymovieapp-2.onrender.com"
   : "http://localhost:3000/api";
 
 
