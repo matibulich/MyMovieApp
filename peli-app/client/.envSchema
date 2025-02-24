@@ -1,1 +1,2 @@
 VITE_API_AUTH_TOKEN = Bearer [AUTH_TOKEN]
+API_URL = http://localhost:3000/api o la API TMDB
