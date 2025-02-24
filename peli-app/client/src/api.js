@@ -1,6 +1,4 @@
-const API_URL = import.meta.env.PROD
-  ? "https://mymovieapp.onrender.com/api"
-  : "http://localhost:3000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api"
 
 
 //FUNCIONES DESDE EL FRONT CONSULTAN AL BACK
@@ -64,6 +62,7 @@ export const addMovieList = async (data, token) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify( data ),
+
     });
 
 
