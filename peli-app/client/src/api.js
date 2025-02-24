@@ -136,3 +136,4 @@ export const deleteMovie = async (movieId, token) => {
 };
 
 export default API_URL;
+

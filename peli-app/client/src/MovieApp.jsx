@@ -5,7 +5,7 @@ import { CardsPopular } from "./components/CardsPopular";
 import { Modals } from "./components/Modals";
 import { ModalProvider } from "./context/ModalContext";
 import { TrailerModal } from "./components/TrailerModal";
-import { Footer } from "./components/footer";
+import { Footer } from "./components/Footer";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { MovieScreen } from "./pages/MovieScreen";
 import { MovieProvider } from "./context/MovieContext";
