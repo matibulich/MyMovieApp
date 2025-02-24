@@ -25,7 +25,7 @@ export const UserPanel = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/movies/userpanel`,
+        `https://mymovieapp-2.onrender.com/api/movies/userpanel`,
         {
           method: "GET",
           headers: {
