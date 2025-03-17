@@ -17,8 +17,8 @@ export const UserPanel = () => {
 
   const [critica, setCritica] = useState(""); 
   const [successMessage, setSuccessMessage] = useState("");
-  const [nombre, setNombre] = useState(localStorage.getItem("nombre") || "");
-  
+  const [nombre, setNombre] = useState(storedName);
+   const storedName = localStorage.getItem("nombre") || "";
 
   useEffect(() => {
   const fetchUserMovies = async () => {
